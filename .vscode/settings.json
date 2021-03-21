@@ -1,0 +1,8 @@
+{
+  "C_Cpp.default.includePath": [
+    "/usr/include/efi",
+    "/usr/include/efi/x86_64",
+    "/usr/include/efi/protocol"
+  ],
+  "cSpell.enabled": false
+}
