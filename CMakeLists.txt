@@ -46,7 +46,10 @@ add_custom_target(
     ${HELLO_EFI}
   DEPENDS ${HELLO_SO})
 
-add_custom_target(
-  ${HELLO_ISO} ALL
-  COMMAND mkisofs -J -o ${HELLO_ISO} ${HELLO}.efi
-  DEPENDS ${HELLO_EFI})
+find_program(MKISOFS mkisofs)
+if(NOT MKISOFS-NOTFOUND)
+  add_custom_target(
+    ${HELLO_ISO} ALL
+    COMMAND mkisofs -J -o ${HELLO_ISO} ${HELLO}.efi
+    DEPENDS ${HELLO_EFI})
+endif()
