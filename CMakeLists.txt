@@ -1,6 +1,8 @@
 project(uefi-hello)
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
+option(WITH_GRAPHICS_STUFF "Enable GOP code" OFF)
+
 set(HELLO hello)
 set(HELLO_EFI ${HELLO}.efi)
 set(HELLO_ISO ${HELLO}.iso)
@@ -20,6 +22,9 @@ find_file(EFI_LDS elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds
           HINTS ${POSSIBLE_GNUEFI_LIBDIRS} REQUIRED)
 
 add_library(${HELLO} main.c)
+if(WITH_GRAPHICS_STUFF)
+  add_compile_definitions(GRAPHICS_STUFF)
+endif()
 target_compile_options(${HELLO} PRIVATE -fno-stack-protector -fpic
                                         -fshort-wchar -mno-red-zone -Wall)
 target_include_directories(${HELLO} PRIVATE /usr/include/efi
@@ -50,6 +55,6 @@ find_program(MKISOFS mkisofs)
 if(NOT MKISOFS-NOTFOUND)
   add_custom_target(
     ${HELLO_ISO} ALL
-    COMMAND mkisofs -J -o ${HELLO_ISO} ${HELLO}.efi
+    COMMAND mkisofs -J -R -o ${HELLO_ISO} ${HELLO}.efi
     DEPENDS ${HELLO_EFI})
 endif()
