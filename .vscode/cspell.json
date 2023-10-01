@@ -1,0 +1,48 @@
+{
+  "dictionaryDefinitions": [
+    {
+      "name": "main",
+      "path": "dictionary.txt"
+    }
+  ],
+  "enableGlobDot": true,
+  "enabledLanguageIds": [
+    "c",
+    "cmake",
+    "cpp",
+    "git-commit",
+    "ignore",
+    "json",
+    "jsonc",
+    "makefile",
+    "makefile2",
+    "markdown",
+    "plaintext",
+    "shellscript",
+    "text",
+    "toml",
+    "yaml",
+    "yml"
+  ],
+  "ignorePaths": [
+    "*.lock",
+    "*.log",
+    ".coverage",
+    ".directory",
+    ".git",
+    ".mypy_cache",
+    ".vscode/extensions.json",
+    "__pycache__",
+    "_build/**",
+    "build/**",
+    "dist/**",
+    "htmlcov/**",
+    "node_modules/**"
+  ],
+  "languageSettings": [
+    {
+      "dictionaries": ["main"],
+      "languageId": "*"
+    }
+  ]
+}

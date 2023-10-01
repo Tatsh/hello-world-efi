@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "compilerPath": "/usr/bin/gcc",
+      "defines": ["EFI_FUNCTION_WRAPPER", "GRAPHICS_STUFF=1"],
+      "includePath": [
+        "${default}",
+        "${workspaceFolder}",
+        "/usr/include/efi/protocol",
+        "/usr/include/efi/x86_64"
+      ],
+      "name": "Linux",
+      "compilerArgs": ["-fno-stack-protector", "-fpic", "-fshort-wchar", "-mno-red-zone", "-Wall"]
+    }
+  ],
+  "version": 4
+}

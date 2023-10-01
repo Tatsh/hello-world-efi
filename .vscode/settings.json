@@ -1,8 +1,32 @@
 {
   "C_Cpp.default.includePath": [
     "/usr/include/efi",
-    "/usr/include/efi/x86_64",
-    "/usr/include/efi/protocol"
+    "/usr/include/efi/protocol",
+    "/usr/include/efi/x86_64"
   ],
-  "cSpell.enabled": false
+  "[c]": {
+    "editor.tabSize": 4
+  },
+  "[cpp]": {
+    "editor.tabSize": 4
+  },
+  "cSpell.enabled": true,
+  "cmake.configureArgs": ["-DGRAPHICS_STUFF=ON", "-DWITH_TESTS=ON"],
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnType": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "editor.insertSpaces": true,
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+  "editor.wordWrapColumn": 100,
+  "files.associations": {
+    "efi.h": "c",
+    "cmocka.h": "c"
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "yaml.format.printWidth": 100
 }
