@@ -7,12 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: pip
       - name: Install tools
-        run: sudo apt-get update -y && sudo apt-get install -y gnu-efi libcmocka-dev lcov
+        run: pipx install cpp-coveralls && sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi libcmocka-dev lcov mkisofs
       - name: Configure
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DGRAPHICS_STUFF=ON
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_GRAPHICS_STUFF=ON -DWITH_TESTS=ON
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
       - name: Run tests
         run: ctest --test-dir ${{github.workspace}}/build
       - name: Generate coverage information

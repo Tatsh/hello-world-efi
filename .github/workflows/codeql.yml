@@ -15,10 +15,10 @@ jobs:
         with:
           languages: ${{ matrix.language }}
       - name: Install tools
-        run: sudo apt-get update -y && sudo apt-get install -y gnu-efi
+        run: sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi mkisofs
       - run: |
-          cmake -DGRAPHICS_STUFF=ON .
-          cmake --build .
+          cmake -DWITH_GRAPHICS_STUFF=ON .
+          cmake --build . --config Debug
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:

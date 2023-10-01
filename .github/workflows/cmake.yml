@@ -7,9 +7,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install tools
-        run: sudo apt-get update -y && sudo apt-get install -y gnu-efi
+        run: sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi mkisofs
       - name: Configure
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DGRAPHICS_STUFF=ON
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_GRAPHICS_STUFF=ON
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
     strategy:

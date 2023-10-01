@@ -8,17 +8,18 @@ set(HELLO_EFI ${HELLO}.efi)
 set(HELLO_ISO ${HELLO}.iso)
 set(HELLO_SO ${HELLO}.so)
 
-set(LIB /lib)
-set(USR_LIB /usr/lib)
-if(EXISTS /usr/lib64)
-  set(LIB /lib64)
-  set(USR_LIB /usr/lib64)
-endif()
-
-set(POSSIBLE_GNUEFI_LIBDIRS ${LIB} ${LIB}/gnuefi ${USR_LIB} ${USR_LIB}/gnuefi)
-find_file(EFI_CRT_OBJS crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o HINTS ${POSSIBLE_GNUEFI_LIBDIRS}
+set(POSSIBLE_GNUEFI_LIBDIRS
+    /lib
+    /lib/gnuefi
+    /lib64
+    /lib64/gnuefi
+    /usr/lib
+    /usr/lib/gnuefi
+    /usr/lib64
+    /usr/lib64/gnuefi)
+find_file(EFI_CRT_OBJS crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o PATHS ${POSSIBLE_GNUEFI_LIBDIRS}
                                                                        REQUIRED)
-find_file(EFI_LDS elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds HINTS ${POSSIBLE_GNUEFI_LIBDIRS}
+find_file(EFI_LDS elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds PATHS ${POSSIBLE_GNUEFI_LIBDIRS}
                                                                    REQUIRED)
 
 add_library(${HELLO} main.c)
@@ -35,8 +36,8 @@ endif()
 
 add_custom_target(
   ${HELLO_SO} ALL
-  COMMAND ld -nostdlib -znocombreloc -T ${EFI_LDS} -shared -Bsymbolic -L ${USR_LIB} ${EFI_CRT_OBJS}
-          ${CMAKE_CURRENT_BINARY_DIR}/lib${HELLO}.a -o ${HELLO_SO} -lefi -lgnuefi
+  COMMAND ld -nostdlib -znocombreloc -T ${EFI_LDS} -shared -Bsymbolic -L /usr/lib64 -L /usr/lib
+          ${EFI_CRT_OBJS} ${CMAKE_CURRENT_BINARY_DIR}/lib${HELLO}.a -o ${HELLO_SO} -lefi -lgnuefi
   DEPENDS ${HELLO})
 
 add_custom_target(
