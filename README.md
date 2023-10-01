@@ -1,5 +1,12 @@
 # Hello World for EFI
 
+[![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
+[![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/hello-world-efi?branch=master)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)
+![GitHub](https://img.shields.io/github/license/Tatsh/hello-world-efi)
+![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.1/master)
+
 This is based on Roderick W. Smith's
 [Creating a "Hello, World" Program](https://www.rodsbooks.com/efi-programming/hello.html). The
 primary difference is the use of CMake as the build system.

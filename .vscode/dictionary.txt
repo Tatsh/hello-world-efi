@@ -2,6 +2,7 @@ bsymbolic
 cdrtools
 cmocka
 codeql
+commitizen
 ctest
 dcmake
 dgraphics

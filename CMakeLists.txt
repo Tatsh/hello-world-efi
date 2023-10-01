@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
-project(uefi-hello)
+project(uefi-hello VERSION 0.0.1)
 
 option(WITH_GRAPHICS_STUFF "Enable GOP code" OFF)
 

@@ -15,3 +15,9 @@ cmake-format = "^0.6.13"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.commitizen]
+tag_format = "v$version"
+version_files = ["CMakeLists.txt", "README.md", "package.json"]
+version_provider = "npm"
+version_scheme = "semver"
