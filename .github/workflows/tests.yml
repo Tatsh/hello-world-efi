@@ -17,7 +17,7 @@ jobs:
         run: ctest --test-dir ${{github.workspace}}/build
       - name: Generate coverage information
         run: geninfo '--exclude=*/test.c' -b ${{github.workspace}} -o coverage1.info ${{github.workspace}}/build/CMakeFiles/general_tests.dir
-      - if: matrix.build-type == Debug
+      - if: matrix.build-type == 'Debug'
         name: Coveralls
         run: coveralls -i main.c
     strategy:
