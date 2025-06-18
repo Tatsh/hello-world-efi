@@ -32,5 +32,6 @@ __pycache__/
 ehthumbs.db
 Thumbs.db
 
-build/
+/build/
 node_modules/
+/.cache/
