@@ -8,13 +8,13 @@
 
 EFI_BOOT_SERVICES *BS;
 
-int setup_bs() {
+static int setup_bs(void **state) {
     BS = malloc(sizeof(EFI_BOOT_SERVICES));
     BS->LocateProtocol = NULL;
     return 0;
 }
 
-int teardown_bs() {
+static int teardown_bs(void **state) {
     free(BS);
     return 0;
 }
@@ -68,7 +68,7 @@ void test_unable_to_locate_gop(void **state) {
     expect_value(__wrap_Print, fmt, L"Unable to locate GOP\n");
     will_return(__wrap_Print, 0);
 
-    assert_int_equal(efi_main(NULL, NULL), EFI_ABORTED | 0x8000000000000000);
+    assert_int_equal(efi_main(NULL, NULL), EFI_ABORTED);
 }
 
 const struct CMUnitTest hello_world_efi_tests[] = {
