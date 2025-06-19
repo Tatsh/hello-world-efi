@@ -23,7 +23,11 @@
   "editor.wordWrapColumn": 100,
   "files.associations": {
     "efi.h": "c",
-    "cmocka.h": "c"
+    "cmocka.h": "c",
+    "__locale": "c",
+    "ios": "c",
+    "format": "c",
+    "cstdlib": "c"
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
