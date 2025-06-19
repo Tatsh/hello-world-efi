@@ -3,6 +3,7 @@ bsymbolic
 cdrtools
 cmocka
 codeowners
+commitizen
 coveragerc
 cppdbg
 cstdlib
@@ -29,7 +30,6 @@ lefi
 lgnuefi
 libcmocka
 mkisofs
-mypy
 nostdlib
 objcopy
 objs
