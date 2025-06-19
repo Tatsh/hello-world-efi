@@ -1,10 +1,10 @@
 {
   "configurations": [
     {
+      "cwd": "${workspaceFolder}/build",
       "name": "General tests",
       "program": "${workspaceFolder}/build/general_tests",
       "request": "launch",
-      "cwd": "${workspaceFolder}/build",
       "type": "cppdbg"
     }
   ]
