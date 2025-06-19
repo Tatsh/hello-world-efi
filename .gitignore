@@ -4,6 +4,7 @@
 *.so
 *.swp*
 *~
+.cspellcache
 .directory
 /.cache/
 /.yarn/install-state.gz
