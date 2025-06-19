@@ -21,7 +21,7 @@ generated.
 3. Clone this repository and have a terminal in the root of it.
 4. `mkdir build`
 5. `cd build`
-6. `cmake ..` (or `cmake -G Ninja ..` if you have Ninja installed).
+6. `cmake -DWITH_GOP=1 -DWITH_TESTS=1 ..` (or `cmake -G Ninja ..` if you have Ninja installed).
 7. `make` (or `ninja` if you used `-G Ninja` in the previous step)
 
 If `hello.iso` was generated, use it on an UEFI system that has a shell (many do not) or emulator
@@ -35,3 +35,8 @@ such as VirtualBox.
 4. Boot up the VM. You will see the EFI shell start to boot.
 5. When the shell shows a prompt, type `fs0:`
 6. Type `hello.efi`. You should see _Hello, world!_ and be returned to a prompt.
+
+## How to run tests
+
+In the `build` directory, run `ctest` or `./general_tests`. These run on the host operating system,
+not in the EFI environment. `test.c` shows how to mock the gnu-efilib.
