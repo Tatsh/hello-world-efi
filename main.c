@@ -29,7 +29,7 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
         nativeMode = gop->Mode->Mode;
         numModes = gop->Mode->MaxMode;
         for (UINTN i = 0; i < numModes; i++) {
-            status = uefi_call_wrapper(gop->QueryMode, 4, gop, i, &SizeOfInfo, &info);
+            uefi_call_wrapper(gop->QueryMode, 4, gop, i, &SizeOfInfo, &info);
             Print(L"mode %2d width %4d height %4d format %x%9s\n",
                   i,
                   info->HorizontalResolution,
