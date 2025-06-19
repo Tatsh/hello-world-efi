@@ -93,5 +93,5 @@
     "format": "prettier -w . && clang-format -i *.c && markdownlint-cli2 --fix '**/*.md' '#node_modules'",
     "qa": "yarn check-spelling && yarn check-formatting"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }

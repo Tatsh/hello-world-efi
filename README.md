@@ -2,7 +2,7 @@
 
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)
 [![License](https://img.shields.io/github/license/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/blob/master/LICENSE.txt)
-![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.1/master)
+![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.2/master)
 [![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
 [![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/hello-world-efi?branch=master)
