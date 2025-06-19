@@ -14,7 +14,7 @@ jobs:
       - name: Install tools
         run: pipx install cpp-coveralls && sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi libcmocka-dev lcov mkisofs
       - name: Configure
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_GRAPHICS_STUFF=ON -DWITH_TESTS=ON
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_GOP=ON -DWITH_TESTS=ON
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
       - name: Run tests

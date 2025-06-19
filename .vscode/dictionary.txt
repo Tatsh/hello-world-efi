@@ -5,6 +5,8 @@ cdrtools
 cmocka
 codeql
 commitizen
+cppdbg
+cstdlib
 ctest
 dcmake
 dwith
@@ -17,6 +19,7 @@ fshort
 funcs
 gcov
 geninfo
+ggdb
 gmock
 gnucxx
 gnuefi

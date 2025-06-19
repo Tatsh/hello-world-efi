@@ -17,7 +17,7 @@ jobs:
       - name: Install tools
         run: sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi mkisofs
       - run: |
-          cmake -DWITH_GRAPHICS_STUFF=ON .
+          cmake -DWITH_GOP=ON .
           cmake --build . --config Debug
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2

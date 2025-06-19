@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 project(uefi-hello VERSION 0.0.1)
 
-option(WITH_GRAPHICS_STUFF "Enable GOP code" OFF)
+option(WITH_GOP "Enable GOP code." OFF)
 
 set(HELLO hello)
 set(HELLO_EFI ${HELLO}.efi)
@@ -23,8 +23,8 @@ find_file(EFI_LDS elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds PATHS ${POSSIBLE_GN
                                                                    REQUIRED)
 
 add_library(${HELLO} main.c)
-if(WITH_GRAPHICS_STUFF)
-  target_compile_definitions(${HELLO} PRIVATE GRAPHICS_STUFF)
+if(WITH_GOP)
+  target_compile_definitions(${HELLO} PRIVATE GOP)
 endif()
 target_compile_options(${HELLO} PRIVATE -fno-stack-protector -fpic -fshort-wchar -mno-red-zone
                                         -Wall)
@@ -63,12 +63,19 @@ if(WITH_TESTS AND CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND test_flags "-Wl,--wrap,${func}")
   endforeach()
   add_executable(general_tests test.c)
-  if(WITH_GRAPHICS_STUFF)
-    target_compile_definitions(general_tests PRIVATE GRAPHICS_STUFF)
+  if(WITH_GOP)
+    target_compile_definitions(general_tests PRIVATE GOP)
   endif()
   target_compile_definitions(general_tests PRIVATE EFI_FUNCTION_WRAPPER)
-  target_compile_options(general_tests PRIVATE --coverage -fno-stack-protector -fpic -fshort-wchar
-                                               -mno-red-zone -Wall -ggdb)
+  target_compile_options(
+    general_tests
+    PRIVATE --coverage
+            -fno-stack-protector
+            -fpic
+            -fshort-wchar
+            -mno-red-zone
+            -Wall
+            -ggdb)
   target_include_directories(general_tests PRIVATE ${cmocka_INCLUDE_DIRS} /usr/include/efi
                                                    /usr/include/efi/protocol)
   target_link_options(general_tests PRIVATE ${test_flags})

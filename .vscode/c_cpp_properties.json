@@ -2,7 +2,7 @@
   "configurations": [
     {
       "compilerPath": "/usr/bin/gcc",
-      "defines": ["EFI_FUNCTION_WRAPPER", "GRAPHICS_STUFF=1"],
+      "defines": ["EFI_FUNCTION_WRAPPER", "GOP=1"],
       "includePath": [
         "${default}",
         "${workspaceFolder}",

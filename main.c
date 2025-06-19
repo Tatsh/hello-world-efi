@@ -5,7 +5,7 @@
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
     InitializeLib(ImageHandle, SystemTable);
     Print(L"Hello, world!\n");
-#ifdef GRAPHICS_STUFF
+#ifdef GOP
     // Borrowed nearly exactly from https://wiki.osdev.org/GOP.
     EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
@@ -52,6 +52,6 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
                   gop->Mode->Info->PixelsPerScanLine);
         }
     }
-#endif // GRAPHICS_STUFF
+#endif // GOP
     return EFI_SUCCESS;
 }

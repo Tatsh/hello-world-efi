@@ -11,7 +11,7 @@
     "editor.tabSize": 4
   },
   "cSpell.enabled": true,
-  "cmake.configureArgs": ["-DWITH_GRAPHICS_STUFF=ON", "-DWITH_TESTS=ON"],
+  "cmake.configureArgs": ["-DWITH_GOP=ON", "-DWITH_TESTS=ON"],
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
