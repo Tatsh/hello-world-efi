@@ -1,11 +1,16 @@
 # Hello World for EFI
 
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)
+[![License](https://img.shields.io/github/license/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/blob/master/LICENSE.txt)
+![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.1/master)
 [![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
 [![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/hello-world-efi?branch=master)
-![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)
-![GitHub](https://img.shields.io/github/license/Tatsh/hello-world-efi)
-![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.1/master)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Stargazers](https://img.shields.io/github/stars/Tatsh/hello-world-efi?logo=github&style=flat)](https://github.com/Tatsh/hello-world-efi/stargazers)
+
+[![@Tatsh](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpublic.api.bsky.app%2Fxrpc%2Fapp.bsky.actor.getProfile%2F%3Factor%3Ddid%3Aplc%3Auq42idtvuccnmtl57nsucz72%26query%3D%24.followersCount%26style%3Dsocial%26logo%3Dbluesky%26label%3DFollow%2520%40Tatsh&query=%24.followersCount&style=social&logo=bluesky&label=Follow%20%40Tatsh)](https://bsky.app/profile/Tatsh.bsky.social)
+[![Mastodon Follow](https://img.shields.io/mastodon/follow/109370961877277568?domain=hostux.social&style=social)](https://hostux.social/@Tatsh)
 
 This is based on Roderick W. Smith's
 [Creating a "Hello, World" Program](https://www.rodsbooks.com/efi-programming/hello.html). The
@@ -39,4 +44,4 @@ such as VirtualBox.
 ## How to run tests
 
 In the `build` directory, run `ctest` or `./general_tests`. These run on the host operating system,
-not in the EFI environment. `test.c` shows how to mock the gnu-efilib.
+not in the EFI environment. `test.c` demonstrates how to mock the gnu-efilib with CMocka.
