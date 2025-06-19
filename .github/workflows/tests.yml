@@ -7,10 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-          cache: pip
       - name: Install tools
         run: pipx install cpp-coveralls && sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi libcmocka-dev lcov mkisofs
       - name: Configure
