@@ -68,10 +68,10 @@ if(WITH_TESTS AND CMAKE_COMPILER_IS_GNUCXX)
   endif()
   target_compile_definitions(general_tests PRIVATE EFI_FUNCTION_WRAPPER)
   target_compile_options(general_tests PRIVATE --coverage -fno-stack-protector -fpic -fshort-wchar
-                                               -mno-red-zone -Wall)
-  target_include_directories(general_tests PRIVATE ${CMOCKA_INCLUDE_DIR} /usr/include/efi
+                                               -mno-red-zone -Wall -ggdb)
+  target_include_directories(general_tests PRIVATE ${cmocka_INCLUDE_DIRS} /usr/include/efi
                                                    /usr/include/efi/protocol)
   target_link_options(general_tests PRIVATE ${test_flags})
-  target_link_libraries(general_tests ${CMOCKA_LIBRARY} gcov)
+  target_link_libraries(general_tests cmocka gcov)
   add_test(NAME general_tests COMMAND general_tests)
 endif()
