@@ -1,11 +1,13 @@
 # Hello World for EFI
 
-![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/tags)
 [![License](https://img.shields.io/github/license/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/blob/master/LICENSE.txt)
-![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.2/master)
+[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.2/master)](https://github.com/Tatsh/hello-world-efi/compare/v0.0.2...master)
+[![CodeQL](https://github.com/Tatsh/hello-world-efi/actions/workflows/codeql.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/codeql.yml)
 [![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
 [![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/hello-world-efi?branch=master)
+[![GitHub Pages](https://github.com/Tatsh/hello-world-efi/actions/workflows/pages/pages-build-deployment/badge.svg)](https://tatsh.github.io/hello-world-efi/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Stargazers](https://img.shields.io/github/stars/Tatsh/hello-world-efi?logo=github&style=flat)](https://github.com/Tatsh/hello-world-efi/stargazers)
 
