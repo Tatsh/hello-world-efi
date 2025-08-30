@@ -1,8 +1,10 @@
 {
   "configurations": [
     {
+      "cStandard": "gnu23",
       "compilerArgs": ["-fno-stack-protector", "-fpic", "-fshort-wchar", "-mno-red-zone", "-Wall"],
       "compilerPath": "/usr/bin/gcc",
+      "cppStandard": "gnu++23",
       "defines": ["EFI_FUNCTION_WRAPPER", "GOP=1"],
       "includePath": [
         "${default}",

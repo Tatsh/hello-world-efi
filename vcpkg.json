@@ -1,0 +1,10 @@
+{
+  "dependencies": [],
+  "description": "Very simple demonstration of UEFI facilities, building with CMake, and testing with CMocka.",
+  "documentation": "https://hello-world-efi.readthedocs.org",
+  "homepage": "https://tatsh.github.io/hello-world-efi/",
+  "license": "MIT",
+  "maintainers": ["Andrew Udvare <audvare@gmail.com>"],
+  "name": "hello-world-efi",
+  "version": "0.0.2"
+}

@@ -1,5 +1,0 @@
-[tool.commitizen]
-tag_format = "v$version"
-version_files = ["CITATION.cff", "CMakeLists.txt", "README.md", "package.json"]
-version_provider = "npm"
-version_scheme = "semver"

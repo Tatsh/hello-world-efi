@@ -1,1 +1,3 @@
-line_width: 100
+format:
+  autosort: true
+  line_width: 100

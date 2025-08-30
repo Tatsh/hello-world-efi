@@ -22,6 +22,7 @@
       ".git/**",
       ".yarn/**/*.cjs",
       ".vscode/extensions.json",
+      "dist/**",
       "man/**"
     ],
     "language": "en-GB",
@@ -33,18 +34,20 @@
     ],
     "useGitignore": true
   },
+  "description": "Very simple demonstration of UEFI facilities, building with CMake, and testing with CMocka.",
   "devDependencies": {
-    "@prettier/plugin-xml": "^3.4.1",
-    "cspell": "^9.1.1",
+    "@prettier/plugin-xml": "^3.4.2",
+    "cspell": "^9.2.0",
     "markdownlint-cli2": "^0.18.1",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "prettier-plugin-ini": "^1.3.0",
     "prettier-plugin-sort-json": "^4.1.1",
-    "prettier-plugin-toml": "^2.0.5",
+    "prettier-plugin-toml": "^2.0.6",
     "yarn-audit-fix": "^10.1.1"
   },
+  "files": ["LICENSE.txt", "README.md"],
   "homepage": "https://tatsh.github.io/hello-world-efi/",
-  "keywords": ["cmocka", "efi"],
+  "keywords": ["efi", "hello-world", "uefi"],
   "license": "MIT",
   "markdownlint-cli2": {
     "config": {
@@ -54,12 +57,13 @@
       "default": true,
       "line-length": {
         "code_blocks": false,
-        "line_length": 100
+        "line_length": 100,
+        "tables": false
       }
     }
   },
   "name": "hello-world-efi",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.4",
   "prettier": {
     "endOfLine": "lf",
     "iniSpaceAroundEquals": true,
@@ -69,6 +73,12 @@
         "files": ["package.json"],
         "options": {
           "parser": "json"
+        }
+      },
+      {
+        "files": [".clang-format"],
+        "options": {
+          "parser": "yaml"
         }
       }
     ],
@@ -87,10 +97,10 @@
     "url": "git@github.com:Tatsh/hello-world-efi.git"
   },
   "scripts": {
-    "bump": "cz bump --increment",
-    "check-formatting": "prettier -c . && clang-format -n --Werror *.c && markdownlint-cli2 '**/*.md' '#node_modules'",
+    "build": "cmake --preset=default -DBUILD_DOCS=ON && cmake --build build",
+    "check-formatting": "cmake-format --check CMakeLists.txt && clang-format -n *.c && prettier -c . && markdownlint-cli2 '**/*.md' '#node_modules'",
     "check-spelling": "cspell --no-progress .",
-    "format": "prettier -w . && clang-format -i *.c && markdownlint-cli2 --fix '**/*.md' '#node_modules'",
+    "format": "cmake-format -i CMakeLists.txt && clang-format -i *.c && yarn prettier -w .",
     "qa": "yarn check-spelling && yarn check-formatting"
   },
   "version": "0.0.2"

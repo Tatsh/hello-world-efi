@@ -1,12 +1,11 @@
----
 jobs:
-  build:
+  test:
     env:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    runs-on: ubuntu-latest
+      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - name: Install tools
         run: pipx install cpp-coveralls && sudo add-apt-repository ppa:brandonsnider/cdrtools && sudo apt-get update -y && sudo apt-get install -y gnu-efi libcmocka-dev lcov mkisofs
       - name: Configure
@@ -23,11 +22,13 @@ jobs:
     strategy:
       matrix:
         build-type: [Debug, Release]
-name: Tests
+name: 'Tests'
 'on':
   pull_request:
     branches:
-      - master
+      - 'master'
   push:
     branches:
-      - master
+      - 'master'
+permissions:
+  contents: 'read'
