@@ -18,6 +18,7 @@ dynsym
 efilib
 endforeach
 esbenp
+foxundermoon
 fpic
 fshort
 funcs
@@ -27,7 +28,6 @@ ggdb
 gmock
 gnucxx
 gnuefi
-gtest
 htmlcov
 iwyu
 jsonnet
@@ -35,9 +35,12 @@ jsonschema
 lefi
 lgnuefi
 libcmocka
+libera
 libjsonnet
+libname
 mkisofs
 mocka
+namedebug
 nostdlib
 objcopy
 objs
@@ -50,10 +53,15 @@ rela
 reloc
 schemafile
 sdata
+shellformat
+srcs
 strequal
 tatsh
 udvare
-vcpkg
+vedantmgoyal
 wchar
+werror
+wextra
+winget
 wiswa
 znocombreloc
