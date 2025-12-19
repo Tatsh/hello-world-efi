@@ -12,6 +12,27 @@ jobs:
         run: cmake -B ${{github.workspace}}/build -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_GOP=ON
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
+      - name: Upload artifacts
+        uses: 'actions/upload-artifact@v6'
+        with:
+          if-no-files-found: error
+          name: hello-world-efi-${{ matrix.build-type }}
+          path: |
+            ${{github.workspace}}/build/hello.efi
+            ${{github.workspace}}/build/hello.iso
+      - name: Attest
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: |
+            ${{github.workspace}}/build/hello.efi
+            ${{github.workspace}}/build/hello.iso
+      - if: ${{ github.ref_type == 'tag' }}
+        name: Upload package
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{github.workspace}}/build/hello.efi
+            ${{github.workspace}}/build/hello.iso
     strategy:
       matrix:
         build-type: [Debug, Release]
@@ -23,3 +44,7 @@ name: Build
   push:
     branches:
       - master
+permissions:
+  attestations: write
+  contents: write
+  id-token: write

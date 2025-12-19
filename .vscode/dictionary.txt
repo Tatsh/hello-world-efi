@@ -54,6 +54,7 @@ reloc
 schemafile
 sdata
 shellformat
+softprops
 srcs
 strequal
 tatsh
