@@ -8,8 +8,10 @@
 *.jsonnet
 *.kate-swp
 *.libjsonnet
+*.libsonnet
 *.lock
 *.log
+*.mdc
 *~
 .*.swp
 .*_cache/

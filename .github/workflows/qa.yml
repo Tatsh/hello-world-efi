@@ -4,9 +4,7 @@ jobs:
     steps:
       - uses: 'actions/checkout@v6'
       - name: 'Install dependencies (Yarn)'
-        run: |
-          yarn
-          pip install cmake-format pyyaml
+        run: 'yarn'
       - name: 'Check formatting'
         run: 'yarn check-formatting'
       - name: 'Check spelling'

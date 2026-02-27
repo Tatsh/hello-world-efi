@@ -14,8 +14,8 @@ local utils = import 'utils.libjsonnet';
   },
   package_json+: {
     scripts+: {
-      'check-formatting': "cmake-format --check CMakeLists.txt && clang-format -n *.c && prettier -c . && markdownlint-cli2 '**/*.md' '#node_modules'",
-      format: 'cmake-format -i CMakeLists.txt && clang-format -i *.c && yarn prettier -w .',
+      'check-formatting': "clang-format -n *.c && prettier -c . && markdownlint-cli2",
+      format: 'clang-format -i *.c && prettier -w .',
     },
   },
   vscode+: {

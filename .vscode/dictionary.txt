@@ -5,10 +5,8 @@ bsymbolic
 buildsystems
 cdrtools
 cmocka
-codeowners
 coveragerc
 cppdbg
-cpptools
 ctest
 dbuild
 dcmake
@@ -38,6 +36,7 @@ libcmocka
 libera
 libjsonnet
 libname
+libsonnet
 mkisofs
 mocka
 namedebug
@@ -47,7 +46,6 @@ objs
 pipx
 pixelsperline
 pycache
-pyyaml
 reflow
 rela
 reloc
