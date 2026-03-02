@@ -21,7 +21,7 @@ jobs:
             ${{github.workspace}}/build/hello.efi
             ${{github.workspace}}/build/hello.iso
       - name: Attest
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             ${{github.workspace}}/build/hello.efi
