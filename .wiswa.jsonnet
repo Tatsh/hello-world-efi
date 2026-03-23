@@ -12,12 +12,7 @@ local utils = import 'utils.libjsonnet';
   copilot+: {
     intro: 'This is a demonstration of UEFI code, building with CMake, and testing with CMocka.',
   },
-  package_json+: {
-    scripts+: {
-      'check-formatting': "clang-format -n *.c && prettier -c . && markdownlint-cli2",
-      format: 'clang-format -i *.c && prettier -w .',
-    },
-  },
+  clang_format_args: '*.c',
   vscode+: {
     c_cpp+: {
       configurations: [

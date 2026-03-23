@@ -65,11 +65,13 @@ srcs
 strequal
 tatsh
 udvare
+vedantmgoyal
 vendored
 venv
 wchar
 werror
 wextra
+winget
 wiswa
 yarnrc
 znocombreloc

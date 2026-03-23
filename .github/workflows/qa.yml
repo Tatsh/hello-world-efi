@@ -31,7 +31,7 @@ jobs:
         id: 'clang-format'
         if: "needs.changes.outputs.cpp == 'true'"
         name: 'Check formatting (clang-format)'
-        run: 'clang-format -n src/*.cpp src/*.h'
+        run: 'clang-format -n *.c'
       - continue-on-error: true
         id: 'prettier'
         name: 'Check formatting (Prettier)'
