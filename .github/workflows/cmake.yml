@@ -28,7 +28,7 @@ jobs:
             ${{github.workspace}}/build/hello.iso
       - if: ${{ github.ref_type == 'tag' }}
         name: Upload package
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             ${{github.workspace}}/build/hello.efi
