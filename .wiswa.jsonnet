@@ -1,6 +1,7 @@
 local utils = import 'utils.libjsonnet';
 
 {
+  uses_user_defaults: true,
   project_type: 'c',
   project_name: 'hello-world-efi',
   version: '0.0.2',
@@ -9,9 +10,6 @@ local utils = import 'utils.libjsonnet';
   want_main: false,
   want_codeql: false,
   want_tests: false,
-  copilot+: {
-    intro: 'This is a demonstration of UEFI code, building with CMake, and testing with CMocka.',
-  },
   clang_format_args: '*.c',
   vscode+: {
     c_cpp+: {

@@ -1,3 +1,4 @@
+Ångström
 autosort
 brandonsnider
 bsky
@@ -5,6 +6,7 @@ bsymbolic
 buildsystems
 cdrtools
 cmocka
+cooldown
 coveragerc
 cppdbg
 ctest
@@ -12,11 +14,11 @@ dashcam
 dbuild
 dcmake
 docstrings
-dorny
 dwith
 dynsym
 efilib
 endforeach
+esac
 esbenp
 foxundermoon
 fpic
@@ -30,6 +32,7 @@ gnucxx
 gnuefi
 htmlcov
 iwyu
+jinja
 jsonnet
 jsonschema
 lefi
@@ -45,16 +48,19 @@ mocka
 mypy
 namedebug
 nostdlib
+npmjs
 objcopy
 objs
 oneline
 pipx
 pixelsperline
 pycache
+pylock
 reflow
 regen
 rela
 reloc
+ripgreprc
 schemafile
 sdata
 shellcheck
@@ -73,6 +79,6 @@ werror
 wextra
 winget
 wiswa
+wiswa's
 yarnrc
 znocombreloc
-ångström
