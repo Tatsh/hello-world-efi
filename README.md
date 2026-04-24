@@ -8,7 +8,7 @@
 [![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.2/master)](https://github.com/Tatsh/hello-world-efi/compare/v0.0.2...master)
 [![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
 [![Dependabot](https://img.shields.io/badge/Dependabot-enabled-blue?logo=dependabot)](https://github.com/dependabot)
-[![GitHub Pages](https://github.com/Tatsh/hello-world-efi/actions/workflows/pages.yml/badge.svg)](https://tatsh.github.io/hello-world-efi/)
+[![pages-build-deployment](https://github.com/Tatsh/hello-world-efi/actions/workflows/pages/pages-build-deployment/badge.svg)](https://tatsh.github.io/hello-world-efi/)
 [![Stargazers](https://img.shields.io/github/stars/Tatsh/hello-world-efi?logo=github&style=flat)](https://github.com/Tatsh/hello-world-efi/stargazers)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![CMake](https://img.shields.io/badge/CMake-6E6E6E?logo=cmake)](https://cmake.org/)
