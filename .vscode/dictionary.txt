@@ -26,6 +26,7 @@ fshort
 funcs
 gcov
 geninfo
+genisoimage
 ggdb
 gmock
 gnucxx
