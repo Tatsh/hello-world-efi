@@ -26,10 +26,12 @@ jobs:
           subject-path: |
             ${{github.workspace}}/build/hello.efi
             ${{github.workspace}}/build/hello.iso
-      - if: ${{ github.ref_type == 'tag' }}
+      - if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
         name: Upload package
         uses: softprops/action-gh-release@v3
         with:
+          draft: true
+          fail_on_unmatched_files: true
           files: |
             ${{github.workspace}}/build/hello.efi
             ${{github.workspace}}/build/hello.iso
@@ -44,6 +46,8 @@ name: Build
   push:
     branches:
       - master
+    tags:
+      - 'v*.*.*'
 permissions:
   attestations: write
   contents: write
