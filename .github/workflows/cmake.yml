@@ -27,14 +27,19 @@ jobs:
             ${{github.workspace}}/build/hello.efi
             ${{github.workspace}}/build/hello.iso
       - if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
+        name: Stage versioned release assets
+        run: |
+          cp build/hello.efi build/hello-world-efi-${{ github.ref_name }}.efi
+          cp build/hello.iso build/hello-world-efi-${{ github.ref_name }}.iso
+      - if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
         name: Upload package
         uses: softprops/action-gh-release@v3
         with:
           draft: true
           fail_on_unmatched_files: true
           files: |
-            ${{github.workspace}}/build/hello.efi
-            ${{github.workspace}}/build/hello.iso
+            ${{github.workspace}}/build/hello-world-efi-${{ github.ref_name }}.efi
+            ${{github.workspace}}/build/hello-world-efi-${{ github.ref_name }}.iso
     strategy:
       matrix:
         build-type: [Debug, Release]
