@@ -4,7 +4,7 @@ local utils = import 'utils.libjsonnet';
   uses_user_defaults: true,
   project_type: 'c',
   project_name: 'hello-world-efi',
-  version: '0.0.2',
+  version: '0.0.3',
   description: 'Very simple demonstration of UEFI facilities, building with CMake, and testing with CMocka.',
   social+: {
     custom_badges: [
