@@ -1,6 +1,5 @@
 Ångström
 autosort
-brandonsnider
 bsky
 bsymbolic
 buildsystems
@@ -55,6 +54,7 @@ objs
 oneline
 pipx
 pixelsperline
+preapproved
 pycache
 pylock
 reflow
