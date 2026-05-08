@@ -30,10 +30,11 @@ primary difference is the use of CMake as the build system.
 ## How to build
 
 Optionally install [mtools](https://www.gnu.org/software/mtools/) (for `mformat`, `mmd`, and
-`mcopy`) plus one of [xorriso](https://www.gnu.org/software/xorriso/),
-[cdrtools](https://sourceforge.net/projects/cdrtools/), or
-[genisoimage](https://wiki.debian.org/genisoimage) so a UEFI-bootable ISO can be generated. All
-four tools must be present, otherwise the `hello.iso` target is skipped.
+`mcopy`) plus either [xorriso](https://www.gnu.org/software/xorriso/) or
+[cdrtools](https://sourceforge.net/projects/cdrtools/) so a UEFI-bootable ISO can be generated. All
+four tools must be present, otherwise the `hello.iso` target is skipped. `genisoimage` is detected
+but does not support the `-eltorito-platform efi` option needed for UEFI boot, so the build will
+fail if it is the only ISO writer available.
 
 1. Have `cmake` in your PATH.
 2. Make sure GNU EFI is installed on your system.
