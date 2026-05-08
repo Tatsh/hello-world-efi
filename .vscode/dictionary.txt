@@ -1,8 +1,10 @@
 Ångström
 autosort
+bootx
 bsky
 bsymbolic
 buildsystems
+cdrom
 cdrtools
 cmocka
 cooldown
@@ -15,7 +17,10 @@ dcmake
 docstrings
 dwith
 dynsym
+efiboot
 efilib
+eltorito
+emul
 endforeach
 esac
 esbenp
@@ -42,16 +47,21 @@ libera
 libjsonnet
 libname
 libsonnet
+mcopy
+mformat
 mkisofs
 mktemp
 mocka
+mtools
 mypy
 namedebug
+nographic
 nostdlib
 npmjs
 objcopy
 objs
 oneline
+ovmf
 pipx
 pixelsperline
 preapproved
@@ -62,6 +72,7 @@ regen
 rela
 reloc
 ripgreprc
+rodata
 schemafile
 sdata
 shellcheck
@@ -71,6 +82,7 @@ softprops
 srcs
 strequal
 tatsh
+torito
 tostring
 udvare
 vedantmgoyal
@@ -82,5 +94,7 @@ wextra
 winget
 wiswa
 wiswa's
+xorriso
+xorrisofs
 yarnrc
 znocombreloc
