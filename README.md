@@ -6,7 +6,6 @@
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/tags)
 [![License](https://img.shields.io/github/license/Tatsh/hello-world-efi)](https://github.com/Tatsh/hello-world-efi/blob/master/LICENSE.txt)
 [![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/hello-world-efi/v0.0.3/master)](https://github.com/Tatsh/hello-world-efi/compare/v0.0.3...master)
-[![QA](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/qa.yml)
 [![Dependabot](https://img.shields.io/badge/Dependabot-enabled-blue?logo=dependabot)](https://github.com/dependabot)
 [![pages-build-deployment](https://github.com/Tatsh/hello-world-efi/actions/workflows/pages/pages-build-deployment/badge.svg)](https://tatsh.github.io/hello-world-efi/)
 [![Stargazers](https://img.shields.io/github/stars/Tatsh/hello-world-efi?logo=github&style=flat)](https://github.com/Tatsh/hello-world-efi/stargazers)
