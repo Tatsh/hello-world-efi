@@ -21,8 +21,15 @@ find_file(EFI_CRT_OBJS crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o PATHS ${POSSIBL
                                                                        REQUIRED)
 find_file(EFI_LDS elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds PATHS ${POSSIBLE_GNUEFI_LIBDIRS}
                                                                    REQUIRED)
+if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  set(EFI_OBJCOPY_ELF "elf64-x86-64")
+  set(EFI_OBJCOPY_EFI "efi-app-x86_64")
+else()
+  set(EFI_OBJCOPY_ELF "elf64-${CMAKE_HOST_SYSTEM_PROCESSOR}")
+  set(EFI_OBJCOPY_EFI "efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR}")
+endif()
 
-add_library(${HELLO} main.c)
+add_library(${HELLO} OBJECT main.c)
 if(WITH_GOP)
   target_compile_definitions(${HELLO} PRIVATE GOP)
 endif()
@@ -37,28 +44,48 @@ endif()
 add_custom_target(
   ${HELLO_SO} ALL
   COMMAND ld -nostdlib -znocombreloc -T ${EFI_LDS} -shared -Bsymbolic -L /usr/lib64 -L /usr/lib
-          ${EFI_CRT_OBJS} ${CMAKE_CURRENT_BINARY_DIR}/lib${HELLO}.a -o ${HELLO_SO} -lefi -lgnuefi
-  DEPENDS ${HELLO})
+          ${EFI_CRT_OBJS} $<TARGET_OBJECTS:${HELLO}> -o ${HELLO_SO} -lefi -lgnuefi
+  DEPENDS ${HELLO}
+  COMMAND_EXPAND_LISTS)
 
 add_custom_target(
   ${HELLO_EFI} ALL
-  COMMAND objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc
-          --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR} ${HELLO_SO} ${HELLO_EFI}
+  COMMAND objcopy -I ${EFI_OBJCOPY_ELF} -O ${EFI_OBJCOPY_EFI} -j .text -j .sdata -j .data -j
+          .rodata -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc ${HELLO_SO} ${HELLO_EFI}
   DEPENDS ${HELLO_SO})
 
-find_program(MKISOFS mkisofs)
-if(NOT MKISOFS-NOTFOUND)
+find_program(MKISOFS NAMES xorrisofs mkisofs genisoimage)
+find_program(MFORMAT mformat)
+find_program(MMD mmd)
+find_program(MCOPY mcopy)
+if(MKISOFS AND MFORMAT AND MMD AND MCOPY)
   add_custom_target(
     ${HELLO_ISO} ALL
-    COMMAND mkisofs -J -R -o ${HELLO_ISO} ${HELLO}.efi
-    DEPENDS ${HELLO_EFI})
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${HELLO}_iso_root
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${HELLO}_iso_root
+    COMMAND dd if=/dev/zero of=${HELLO}_iso_root/efi.img bs=1024 count=1024 status=none
+    COMMAND ${MFORMAT} -i ${HELLO}_iso_root/efi.img -v EFIBOOT
+    COMMAND ${MMD} -i ${HELLO}_iso_root/efi.img ::/EFI ::/EFI/BOOT
+    COMMAND ${MCOPY} -i ${HELLO}_iso_root/efi.img ${HELLO_EFI} ::/EFI/BOOT/BOOTX64.EFI
+    COMMAND ${MKISOFS} -V ${HELLO} -o ${HELLO_ISO} -eltorito-platform efi -eltorito-boot
+            efi.img -no-emul-boot ${HELLO}_iso_root
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${HELLO_EFI}
+    COMMENT "Building UEFI-bootable ISO ${HELLO_ISO}")
+  set_property(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} APPEND PROPERTY ADDITIONAL_CLEAN_FILES
+                                                                    ${HELLO}_iso_root)
+else()
+  message(
+    STATUS
+    "Skipping ${HELLO_ISO}: install mtools (mformat, mmd, mcopy) and one of xorrisofs, mkisofs, or genisoimage to build a UEFI-bootable ISO."
+  )
 endif()
 
 if(WITH_TESTS AND CMAKE_COMPILER_IS_GNUCXX)
   enable_testing()
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
   find_package(cmocka REQUIRED)
-  set(mocked_funcs "InitializeLib;Print;efi_call2;efi_call3;efi_call4")
+  set(mocked_funcs "InitializeLib;Print;efi_call1;efi_call2;efi_call3;efi_call4")
   foreach(func ${mocked_funcs})
     list(APPEND test_flags "-Wl,--wrap,${func}")
   endforeach()
@@ -76,8 +103,9 @@ if(WITH_TESTS AND CMAKE_COMPILER_IS_GNUCXX)
             -mno-red-zone
             -Wall
             -ggdb)
-  target_include_directories(general_tests PRIVATE ${cmocka_INCLUDE_DIRS} /usr/include/efi
-                                                   /usr/include/efi/protocol)
+  target_include_directories(
+    general_tests PRIVATE ${cmocka_INCLUDE_DIRS} /usr/include/efi
+                          /usr/include/efi/${CMAKE_HOST_SYSTEM_PROCESSOR} /usr/include/efi/protocol)
   target_link_options(general_tests PRIVATE ${test_flags})
   target_link_libraries(general_tests cmocka gcov)
   add_test(NAME general_tests COMMAND general_tests)

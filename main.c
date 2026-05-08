@@ -5,6 +5,11 @@
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
     InitializeLib(ImageHandle, SystemTable);
     Print(L"Hello, world!\n");
+    Print(L"Press any key to show GOP modes.\n");
+    EFI_INPUT_KEY key;
+    UINTN index;
+    uefi_call_wrapper(BS->WaitForEvent, 3, 1, &SystemTable->ConIn->WaitForKey, &index);
+    uefi_call_wrapper(SystemTable->ConIn->ReadKeyStroke, 2, SystemTable->ConIn, &key);
 #ifdef GOP
     // Borrowed nearly exactly from https://wiki.osdev.org/GOP.
     EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
@@ -37,21 +42,17 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
                   info->PixelFormat,
                   i == nativeMode ? "(current)" : "");
         }
-        UINTN mode = 12;
-        status = uefi_call_wrapper(gop->SetMode, 2, gop, mode);
-        if (EFI_ERROR(status)) {
-            Print(L"Unable to set mode %2d.\n", mode);
-            return EFI_ABORTED;
-        } else {
-            Print(L"Framebuffer address %x size %d, width %d height %d "
-                  L"pixelsperline %d",
-                  gop->Mode->FrameBufferBase,
-                  gop->Mode->FrameBufferSize,
-                  gop->Mode->Info->HorizontalResolution,
-                  gop->Mode->Info->VerticalResolution,
-                  gop->Mode->Info->PixelsPerScanLine);
-        }
+        Print(L"Framebuffer address %x size %d, width %d height %d pixelsperline %d",
+              gop->Mode->FrameBufferBase,
+              gop->Mode->FrameBufferSize,
+              gop->Mode->Info->HorizontalResolution,
+              gop->Mode->Info->VerticalResolution,
+              gop->Mode->Info->PixelsPerScanLine);
     }
 #endif // GOP
+    Print(L"\nPress any key to exit.\n");
+    uefi_call_wrapper(BS->WaitForEvent, 3, 1, &SystemTable->ConIn->WaitForKey, &index);
+    uefi_call_wrapper(SystemTable->ConIn->ReadKeyStroke, 2, SystemTable->ConIn, &key);
+    uefi_call_wrapper(SystemTable->ConOut->ClearScreen, 1, SystemTable->ConOut);
     return EFI_SUCCESS;
 }

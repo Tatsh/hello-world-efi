@@ -9,6 +9,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Interactive prompts in the application: it now greets, prompts for a keypress before listing GOP
+  modes and framebuffer information, prompts again before exiting, and clears the screen on the way
+  out so output remains visible.
+
+### Changed
+
+- `hello.iso` is now a genuine UEFI-bootable ISO. It embeds a FAT image containing
+  `EFI/BOOT/BOOTX64.EFI` and exposes it through El Torito, so UEFI firmware (such as OVMF) boots
+  the application automatically without any manual `fs0:` step.
+- Building `hello.iso` now requires `mtools` (`mformat`, `mmd`, and `mcopy`) along with one of
+  `xorrisofs`, `mkisofs`, or `genisoimage`; if any are missing, the `hello.iso` target is skipped
+  with a status message.
+- Updated `README.md` to document the new build dependencies and the auto-boot QEMU flow.
+
+### Removed
+
+- The arbitrary `SetMode(12)` call that wiped earlier output before the user could read it.
+
 ## [0.0.3] - 2026-05-07
 
 ### Added

@@ -30,8 +30,11 @@ primary difference is the use of CMake as the build system.
 
 ## How to build
 
-Optionally install [cdrtools](https://sourceforge.net/projects/cdrtools/) so an ISO can be
-generated.
+Optionally install [mtools](https://www.gnu.org/software/mtools/) (for `mformat`, `mmd`, and
+`mcopy`) plus one of [xorriso](https://www.gnu.org/software/xorriso/),
+[cdrtools](https://sourceforge.net/projects/cdrtools/), or
+[genisoimage](https://wiki.debian.org/genisoimage) so a UEFI-bootable ISO can be generated. All
+four tools must be present, otherwise the `hello.iso` target is skipped.
 
 1. Have `cmake` in your PATH.
 2. Make sure GNU EFI is installed on your system.
@@ -42,18 +45,28 @@ generated.
 7. `make` (or `ninja` if you used `-G Ninja` in the previous step)
 
 If `hello.iso` was generated, use it on an UEFI system that has a shell (many do not) or emulator
-such as VirtualBox.
+such as QEMU.
 
-## How to run in VirtualBox
+## How to run in QEMU
 
-1. Set up a new VM. It does not matter too much what settings you pick at this point.
-2. In the VM settings, under _System_, check _Enable EFI (special OSes only)_.
-3. For storage, 'insert' the `hello.iso` file.
-4. Boot up the VM. You will see the EFI shell start to boot.
-5. When the shell shows a prompt, type `fs0:`
-6. Type `hello.efi`. You should see _Hello, world!_ and be returned to a prompt.
+1. Install `qemu-system-x86_64` and an OVMF firmware package (for example `edk2-ovmf` on Fedora
+   and Gentoo, or `ovmf` on Debian and Ubuntu).
+2. From the directory containing `hello.iso`, run:
+
+   ```shell
+   qemu-system-x86_64 -bios /usr/share/edk2-ovmf/OVMF_CODE.fd -cdrom hello.iso
+   ```
+
+   Adjust the `-bios` path to match where your distribution installs `OVMF_CODE.fd`.
+
+3. The firmware locates `\EFI\BOOT\BOOTX64.EFI` on the El Torito FAT image inside the ISO and runs
+   it automatically. _Hello, world!_ appears, and the program returns to the firmware boot
+   manager.
+4. Close the QEMU window (or press <kbd>Ctrl</kbd>+<kbd>A</kbd> then <kbd>X</kbd> if you launched
+   with `-nographic`) to exit.
 
 ## How to run tests
 
 In the `build` directory, run `ctest` or `./general_tests`. These run on the host operating system,
-not in the EFI environment. `test.c` demonstrates how to mock the gnu-efilib with CMocka.
+not in the EFI environment. `test.c` demonstrates how to mock the gnu-efilib with CMocka. Tests can
+only be built with GCC.

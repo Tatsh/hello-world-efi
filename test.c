@@ -8,15 +8,22 @@
 
 #include <cmocka.h>
 
+// Suppress gnu-efi's jmp_buf typedef so cmocka's setjmp dependency wins.
+#define GNU_EFI_SETJMP_H
 #include "main.c"
 
 EFI_BOOT_SERVICES *BS;
 EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
 EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *gopModeInfo;
+static SIMPLE_INPUT_INTERFACE fakeConIn;
+static SIMPLE_TEXT_OUTPUT_INTERFACE fakeConOut;
+static EFI_SYSTEM_TABLE fakeSystemTable;
 
 static int setup_bs(void **state) {
+    (void)state;
     BS = malloc(sizeof(EFI_BOOT_SERVICES));
     BS->LocateProtocol = NULL;
+    BS->WaitForEvent = NULL;
     gop = malloc(sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
     gop->QueryMode = NULL;
     gop->Mode = NULL;
@@ -30,10 +37,17 @@ static int setup_bs(void **state) {
     gopModeInfo->PixelInformation.BlueMask = 0;
     gopModeInfo->PixelInformation.ReservedMask = 0;
     gopModeInfo->PixelsPerScanLine = 800;
+    fakeConIn.Reset = NULL;
+    fakeConIn.ReadKeyStroke = NULL;
+    fakeConIn.WaitForKey = NULL;
+    fakeConOut.ClearScreen = NULL;
+    fakeSystemTable.ConIn = &fakeConIn;
+    fakeSystemTable.ConOut = &fakeConOut;
     return 0;
 }
 
 static int teardown_bs(void **state) {
+    (void)state;
     free(BS);
     free(gop->Mode);
     free(gop);
@@ -42,6 +56,8 @@ static int teardown_bs(void **state) {
 }
 
 VOID __wrap_InitializeLib(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE SystemTable) {
+    (void)ImageHandle;
+    (void)SystemTable;
 }
 
 UINTN __wrap_Print(const CHAR16 *fmt, ...) {
@@ -49,7 +65,14 @@ UINTN __wrap_Print(const CHAR16 *fmt, ...) {
     return mock();
 }
 
-// This is always gop->SetMode.
+// ConOut->ClearScreen.
+UINT64 __wrap_efi_call1(void *func, UINT64 arg1) {
+    check_expected_ptr(func);
+    check_expected(arg1);
+    return mock();
+}
+
+// gop->SetMode and ConIn->ReadKeyStroke.
 UINT64 __wrap_efi_call2(void *func, UINT64 arg1, UINT64 arg2) {
     check_expected_ptr(func);
     check_expected(arg1);
@@ -57,7 +80,7 @@ UINT64 __wrap_efi_call2(void *func, UINT64 arg1, UINT64 arg2) {
     return mock();
 }
 
-// This is always BS->LocateProtocol.
+// BS->LocateProtocol and BS->WaitForEvent.
 UINT64 __wrap_efi_call3(void *func, UINT64 arg1, UINT64 arg2, void **arg3) {
     check_expected_ptr(func);
     check_expected(arg1);
@@ -68,7 +91,7 @@ UINT64 __wrap_efi_call3(void *func, UINT64 arg1, UINT64 arg2, void **arg3) {
     return mock();
 }
 
-// This is always gop->QueryMode.
+// gop->QueryMode.
 UINT64 __wrap_efi_call4(void *func, void *arg1, UINT64 arg2, void **arg3, void **arg4) {
     check_expected_ptr(func);
     check_expected_ptr(arg1);
@@ -80,158 +103,127 @@ UINT64 __wrap_efi_call4(void *func, void *arg1, UINT64 arg2, void **arg3, void *
     return mock();
 }
 
-void test_unable_to_locate_gop(void **state) {
-    (void)state;
+static void expect_initial_prompt_and_pause(void) {
     expect_value(__wrap_Print, fmt, L"Hello, world!\n");
     will_return(__wrap_Print, 0);
-    // LocateProtocol
+    expect_value(__wrap_Print, fmt, L"Press any key to show GOP modes.\n");
+    will_return(__wrap_Print, 0);
+    // BS->WaitForEvent.
+    expect_value(__wrap_efi_call3, func, NULL);
+    expect_value(__wrap_efi_call3, arg1, 1);
+    expect_value(__wrap_efi_call3, arg2, (UINT64)&fakeConIn.WaitForKey);
+    expect_any(__wrap_efi_call3, arg3);
+    will_return(__wrap_efi_call3, EFI_SUCCESS);
+    // ConIn->ReadKeyStroke.
+    expect_value(__wrap_efi_call2, func, NULL);
+    expect_value(__wrap_efi_call2, arg1, (UINT64)&fakeConIn);
+    expect_any(__wrap_efi_call2, arg2);
+    will_return(__wrap_efi_call2, EFI_SUCCESS);
+}
+
+static void expect_locate_protocol(UINT64 returnValue) {
     EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
     expect_value(__wrap_efi_call3, func, NULL);
     expect_memory(__wrap_efi_call3, arg1, &gopGuid, sizeof(EFI_GUID));
     expect_value(__wrap_efi_call3, arg2, NULL);
     expect_any(__wrap_efi_call3, arg3);
-    will_return(__wrap_efi_call3, -1);
-    // Print
+    will_return(__wrap_efi_call3, returnValue);
+}
+
+static void expect_query_mode(UINT64 mode, UINT64 returnValue) {
+    expect_value(__wrap_efi_call4, func, NULL);
+    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
+    expect_value(__wrap_efi_call4, arg2, mode);
+    expect_any(__wrap_efi_call4, arg3);
+    expect_any(__wrap_efi_call4, arg4);
+    will_return(__wrap_efi_call4, returnValue);
+}
+
+static void expect_set_mode(UINT64 mode, UINT64 returnValue) {
+    expect_value(__wrap_efi_call2, func, NULL);
+    expect_memory(__wrap_efi_call2, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
+    expect_value(__wrap_efi_call2, arg2, mode);
+    will_return(__wrap_efi_call2, returnValue);
+}
+
+static void expect_exit_pause_and_clear(void) {
+    expect_value(__wrap_Print, fmt, L"\nPress any key to exit.\n");
+    will_return(__wrap_Print, 0);
+    // BS->WaitForEvent.
+    expect_value(__wrap_efi_call3, func, NULL);
+    expect_value(__wrap_efi_call3, arg1, 1);
+    expect_value(__wrap_efi_call3, arg2, (UINT64)&fakeConIn.WaitForKey);
+    expect_any(__wrap_efi_call3, arg3);
+    will_return(__wrap_efi_call3, EFI_SUCCESS);
+    // ConIn->ReadKeyStroke.
+    expect_value(__wrap_efi_call2, func, NULL);
+    expect_value(__wrap_efi_call2, arg1, (UINT64)&fakeConIn);
+    expect_any(__wrap_efi_call2, arg2);
+    will_return(__wrap_efi_call2, EFI_SUCCESS);
+    // ConOut->ClearScreen.
+    expect_value(__wrap_efi_call1, func, NULL);
+    expect_value(__wrap_efi_call1, arg1, (UINT64)&fakeConOut);
+    will_return(__wrap_efi_call1, EFI_SUCCESS);
+}
+
+void test_unable_to_locate_gop(void **state) {
+    (void)state;
+    expect_initial_prompt_and_pause();
+    expect_locate_protocol(EFI_ABORTED);
     expect_value(__wrap_Print, fmt, L"Unable to locate GOP.\n");
     will_return(__wrap_Print, 0);
-    assert_int_equal(efi_main(NULL, NULL), EFI_ABORTED);
+    assert_int_equal(efi_main(NULL, &fakeSystemTable), EFI_ABORTED);
 }
 
 void test_unable_to_get_native_mode(void **state) {
     (void)state;
-    expect_value(__wrap_Print, fmt, L"Hello, world!\n");
-    will_return(__wrap_Print, 0);
-    // LocateProtocol
-    EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-    expect_value(__wrap_efi_call3, func, NULL);
-    expect_memory(__wrap_efi_call3, arg1, &gopGuid, sizeof(EFI_GUID));
-    expect_value(__wrap_efi_call3, arg2, NULL);
-    expect_any(__wrap_efi_call3, arg3);
-    will_return(__wrap_efi_call3, EFI_SUCCESS);
-    // gop->QueryMode
-    expect_value(__wrap_efi_call4, func, NULL);
-    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call4, arg2, 0);
-    expect_any(__wrap_efi_call4, arg3);
-    expect_any(__wrap_efi_call4, arg4);
-    will_return(__wrap_efi_call4, -1);
-    // Print
+    expect_initial_prompt_and_pause();
+    expect_locate_protocol(EFI_SUCCESS);
+    expect_query_mode(0, EFI_ABORTED);
     expect_value(__wrap_Print, fmt, L"Unable to get native mode.\n");
     will_return(__wrap_Print, 0);
-    assert_int_equal(efi_main(NULL, NULL), EFI_ABORTED);
+    assert_int_equal(efi_main(NULL, &fakeSystemTable), EFI_ABORTED);
 }
 
-void test_printing_modes_and_fail_to_set_12(void **state) {
+void test_unable_to_get_native_mode_after_set_mode_fails(void **state) {
     (void)state;
-    // Set up the gop modes info.
-    gop->Mode = malloc(sizeof(EFI_GRAPHICS_OUTPUT_MODE_INFORMATION));
-    gop->Mode->Mode = 0;
-    gop->Mode->MaxMode = 1;
-    gop->Mode->FrameBufferBase = 0x12345678;
-    gop->Mode->FrameBufferSize = 0x100000;
-    // Print
-    expect_value(__wrap_Print, fmt, L"Hello, world!\n");
+    expect_initial_prompt_and_pause();
+    expect_locate_protocol(EFI_SUCCESS);
+    expect_query_mode(0, EFI_NOT_STARTED);
+    expect_set_mode(0, EFI_ABORTED);
+    expect_value(__wrap_Print, fmt, L"Unable to get native mode.\n");
     will_return(__wrap_Print, 0);
-    // LocateProtocol
-    EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-    expect_value(__wrap_efi_call3, func, NULL);
-    expect_memory(__wrap_efi_call3, arg1, &gopGuid, sizeof(EFI_GUID));
-    expect_value(__wrap_efi_call3, arg2, NULL);
-    expect_any(__wrap_efi_call3, arg3);
-    will_return(__wrap_efi_call3, EFI_SUCCESS);
-    // gop->QueryMode 1
-    expect_value(__wrap_efi_call4, func, NULL);
-    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call4, arg2, 0);
-    expect_any(__wrap_efi_call4, arg3);
-    expect_any(__wrap_efi_call4, arg4);
-    will_return(__wrap_efi_call4, EFI_NOT_STARTED);
-    // gop->SetMode 1
-    expect_value(__wrap_efi_call2, func, NULL);
-    expect_memory(__wrap_efi_call2, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call2, arg2, 0);
-    will_return(__wrap_efi_call2, EFI_SUCCESS);
-    // gop->QueryMode 2
-    expect_value(__wrap_efi_call4, func, NULL);
-    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call4, arg2, 0);
-    expect_any(__wrap_efi_call4, arg3);
-    expect_any(__wrap_efi_call4, arg4);
-    will_return(__wrap_efi_call4, EFI_SUCCESS);
-    // gop->SetMode 2
-    expect_value(__wrap_efi_call2, func, NULL);
-    expect_memory(__wrap_efi_call2, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call2, arg2, 12);
-    will_return(__wrap_efi_call2, -1);
-    // Print
-    expect_value(__wrap_Print, fmt, L"mode %2d width %4d height %4d format %x%9s\n");
-    will_return(__wrap_Print, 0);
-    // Print
-    expect_value(__wrap_Print, fmt, L"Unable to set mode %2d.\n");
-    will_return(__wrap_Print, 0);
-    assert_int_equal(efi_main(NULL, NULL), EFI_ABORTED);
+    assert_int_equal(efi_main(NULL, &fakeSystemTable), EFI_ABORTED);
 }
 
-void test_printing_modes_and_set_12(void **state) {
+void test_full_success_path(void **state) {
     (void)state;
-    // Set up the gop modes info.
-    gop->Mode = malloc(sizeof(EFI_GRAPHICS_OUTPUT_MODE_INFORMATION));
+    gop->Mode = malloc(sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE));
     gop->Mode->Mode = 0;
     gop->Mode->MaxMode = 1;
     gop->Mode->FrameBufferBase = 0x12345678;
     gop->Mode->FrameBufferSize = 0x100000;
     gop->Mode->Info = gopModeInfo;
-    // Print
-    expect_value(__wrap_Print, fmt, L"Hello, world!\n");
-    will_return(__wrap_Print, 0);
-    // LocateProtocol
-    EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-    expect_value(__wrap_efi_call3, func, NULL);
-    expect_memory(__wrap_efi_call3, arg1, &gopGuid, sizeof(EFI_GUID));
-    expect_value(__wrap_efi_call3, arg2, NULL);
-    expect_any(__wrap_efi_call3, arg3);
-    will_return(__wrap_efi_call3, EFI_SUCCESS);
-    // gop->QueryMode 1
-    expect_value(__wrap_efi_call4, func, NULL);
-    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call4, arg2, 0);
-    expect_any(__wrap_efi_call4, arg3);
-    expect_any(__wrap_efi_call4, arg4);
-    will_return(__wrap_efi_call4, EFI_NOT_STARTED);
-    // gop->SetMode 1
-    expect_value(__wrap_efi_call2, func, NULL);
-    expect_memory(__wrap_efi_call2, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call2, arg2, 0);
-    will_return(__wrap_efi_call2, EFI_SUCCESS);
-    // gop->QueryMode 2
-    expect_value(__wrap_efi_call4, func, NULL);
-    expect_memory(__wrap_efi_call4, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call4, arg2, 0);
-    expect_any(__wrap_efi_call4, arg3);
-    expect_any(__wrap_efi_call4, arg4);
-    will_return(__wrap_efi_call4, EFI_SUCCESS);
-    // Print
+    expect_initial_prompt_and_pause();
+    expect_locate_protocol(EFI_SUCCESS);
+    expect_query_mode(0, EFI_NOT_STARTED);
+    expect_set_mode(0, EFI_SUCCESS);
+    expect_query_mode(0, EFI_SUCCESS);
     expect_value(__wrap_Print, fmt, L"mode %2d width %4d height %4d format %x%9s\n");
     will_return(__wrap_Print, 0);
-    // gop->SetMode 2
-    expect_value(__wrap_efi_call2, func, NULL);
-    expect_memory(__wrap_efi_call2, arg1, gop, sizeof(EFI_GRAPHICS_OUTPUT_PROTOCOL));
-    expect_value(__wrap_efi_call2, arg2, 12);
-    will_return(__wrap_efi_call2, EFI_SUCCESS);
-    // Print
-    expect_value(__wrap_Print,
-                 fmt,
-                 L"Framebuffer address %x size %d, width %d height %d "
-                 L"pixelsperline %d");
+    expect_value(
+        __wrap_Print, fmt, L"Framebuffer address %x size %d, width %d height %d pixelsperline %d");
     will_return(__wrap_Print, 0);
-    assert_int_equal(efi_main(NULL, NULL), EFI_SUCCESS);
+    expect_exit_pause_and_clear();
+    assert_int_equal(efi_main(NULL, &fakeSystemTable), EFI_SUCCESS);
 }
 
 const struct CMUnitTest hello_world_efi_tests[] = {
     cmocka_unit_test_setup_teardown(test_unable_to_locate_gop, setup_bs, teardown_bs),
     cmocka_unit_test_setup_teardown(test_unable_to_get_native_mode, setup_bs, teardown_bs),
-    cmocka_unit_test_setup_teardown(test_printing_modes_and_fail_to_set_12, setup_bs, teardown_bs),
-    cmocka_unit_test_setup_teardown(test_printing_modes_and_set_12, setup_bs, teardown_bs),
+    cmocka_unit_test_setup_teardown(
+        test_unable_to_get_native_mode_after_set_mode_fails, setup_bs, teardown_bs),
+    cmocka_unit_test_setup_teardown(test_full_success_path, setup_bs, teardown_bs),
 };
 
 int main(void) {
