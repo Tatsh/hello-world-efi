@@ -5,6 +5,9 @@
     "/usr/include/efi/protocol",
     "/usr/include/efi/x86_64"
   ],
+  "[**/vcpkg*.json]": {
+    "files.insertFinalNewline": false
+  },
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.tabSize": 4
