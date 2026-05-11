@@ -1,5 +1,4 @@
 Ångström
-autosort
 bootx
 bsky
 bsymbolic
@@ -7,13 +6,13 @@ buildsystems
 cdrom
 cdrtools
 cmocka
+cmocka's
 cooldown
 coveragerc
 cppdbg
 ctest
 dashcam
 dbuild
-dcmake
 docstrings
 dwith
 dynsym

@@ -6,12 +6,16 @@ local utils = import 'utils.libjsonnet';
   project_name: 'hello-world-efi',
   version: '0.0.3',
   description: 'Very simple demonstration of UEFI facilities, building with CMake, and testing with CMocka.',
-  social+: {
-    custom_badges: [
-      '[![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml)',
-      '[![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/hello-world-efi?branch=master)',
-    ],
-  },
+  custom_project_badges: [
+    {
+      anchor: '[![Tests](https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml/badge.svg)]',
+      href: 'https://github.com/Tatsh/hello-world-efi/actions/workflows/tests.yml',
+    },
+    {
+      anchor: '[![Coverage Status](https://coveralls.io/repos/github/Tatsh/hello-world-efi/badge.svg?branch=master)]',
+      href: 'https://coveralls.io/github/Tatsh/hello-world-efi?branch=master',
+    },
+  ],
   keywords: ['efi', 'hello-world', 'uefi'],
   want_main: false,
   want_codeql: false,
