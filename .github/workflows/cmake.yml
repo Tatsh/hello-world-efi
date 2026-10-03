@@ -3,9 +3,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Install tools
         run: sudo apt-get update -y && sudo apt-get install -y gnu-efi mtools ninja-build xorriso
       - name: Configure
@@ -13,7 +14,7 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
       - name: Upload artifacts
-        uses: 'actions/upload-artifact@v7'
+        uses: 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
         with:
           if-no-files-found: error
           name: hello-world-efi-${{ matrix.build-type }}
@@ -21,7 +22,7 @@ jobs:
             ${{github.workspace}}/build/hello.efi
             ${{github.workspace}}/build/hello.iso
       - name: Attest
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
         with:
           subject-path: |
             ${{github.workspace}}/build/hello.efi
@@ -29,17 +30,20 @@ jobs:
       - if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
         name: Stage versioned release assets
         run: |
-          cp build/hello.efi build/hello-world-efi-${{ github.ref_name }}.efi
-          cp build/hello.iso build/hello-world-efi-${{ github.ref_name }}.iso
-      - if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
+          cp build/hello.efi "build/hello-world-efi-${GITHUB_REF_NAME}.efi"
+          cp build/hello.iso "build/hello-world-efi-${GITHUB_REF_NAME}.iso"
+      - env:
+          GH_REPO: '${{ github.repository }}'
+          GH_TOKEN: '${{ github.token }}'
+        if: ${{ github.ref_type == 'tag' && matrix.build-type == 'Release' }}
         name: Upload package
-        uses: softprops/action-gh-release@v3
-        with:
-          draft: true
-          fail_on_unmatched_files: true
-          files: |
-            ${{github.workspace}}/build/hello-world-efi-${{ github.ref_name }}.efi
-            ${{github.workspace}}/build/hello-world-efi-${{ github.ref_name }}.iso
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 ||
+            gh release create "$GITHUB_REF_NAME" --draft --notes ''
+          gh release upload "$GITHUB_REF_NAME" \
+            "build/hello-world-efi-${GITHUB_REF_NAME}.efi" \
+            "build/hello-world-efi-${GITHUB_REF_NAME}.iso" \
+            --clobber
     strategy:
       matrix:
         build-type: [Debug, Release]
