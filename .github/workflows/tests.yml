@@ -1,8 +1,14 @@
+concurrency:
+  cancel-in-progress: true
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}'
 jobs:
   test:
     env:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    name: 'Tests'
+    permissions:
+      contents: 'read'
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -14,13 +20,15 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y genisoimage gnu-efi libcmocka-dev lcov ninja-build
       - name: Configure
-        run: cmake -B ${{github.workspace}}/build -G Ninja -DWITH_GOP=ON -DWITH_TESTS=ON
-      - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
+        run: cmake -B "${GITHUB_WORKSPACE}/build" -G Ninja -DWITH_GOP=ON -DWITH_TESTS=ON
+      - env:
+          BUILD_TYPE: '${{ matrix.build-type }}'
+        name: Build
+        run: cmake --build "${GITHUB_WORKSPACE}/build" --config "${BUILD_TYPE}"
       - name: Run tests
-        run: ctest --test-dir ${{github.workspace}}/build
+        run: ctest --test-dir "${GITHUB_WORKSPACE}/build"
       - name: Generate coverage information
-        run: geninfo '--exclude=*/test.c' -b ${{github.workspace}} -o coverage1.info ${{github.workspace}}/build/CMakeFiles/general_tests.dir
+        run: geninfo '--exclude=*/test.c' -b "${GITHUB_WORKSPACE}" -o coverage1.info "${GITHUB_WORKSPACE}/build/CMakeFiles/general_tests.dir"
       - if: matrix.build-type == 'Debug'
         name: Coveralls
         run: coveralls -i main.c
@@ -35,5 +43,4 @@ name: 'Tests'
   push:
     branches:
       - 'master'
-permissions:
-  contents: 'read'
+permissions: {}

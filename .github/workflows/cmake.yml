@@ -1,6 +1,15 @@
 ---
+concurrency:
+  cancel-in-progress: false
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  queue: 'max'
 jobs:
   build:
+    name: 'Build'
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -13,8 +22,10 @@ jobs:
           BUILD_TYPE: ${{ matrix.build-type }}
         name: Configure
         run: cmake -B build -G Ninja -DWITH_GOP=ON -D "CMAKE_BUILD_TYPE=${BUILD_TYPE}"
-      - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build-type}}
+      - env:
+          BUILD_TYPE: '${{ matrix.build-type }}'
+        name: Build
+        run: cmake --build "${GITHUB_WORKSPACE}/build" --config "${BUILD_TYPE}"
       - name: Upload artifacts
         uses: 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
         with:
@@ -59,7 +70,4 @@ name: Build
       - master
     tags:
       - 'v*.*.*'
-permissions:
-  attestations: write
-  contents: write
-  id-token: write
+permissions: {}
