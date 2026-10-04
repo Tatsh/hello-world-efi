@@ -50,6 +50,7 @@ mformat
 mkisofs
 mktemp
 mocka
+msix
 mtools
 mypy
 namedebug
