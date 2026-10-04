@@ -20,6 +20,7 @@ local utils = import 'utils.libjsonnet';
   want_main: false,
   want_codeql: false,
   want_tests: false,
+  want_winget: false,
   clang_format_args: '*.c',
   vscode+: {
     c_cpp+: {
