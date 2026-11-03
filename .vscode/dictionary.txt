@@ -1,3 +1,4 @@
+analyzer
 bootx
 bsky
 bsymbolic
@@ -11,11 +12,13 @@ cppdbg
 ctest
 dashcam
 dbuild
+dcmake
 docstrings
 dwith
 dynsym
 efiboot
 efilib
+elif
 eltorito
 emul
 endforeach
@@ -34,6 +37,7 @@ gnucxx
 gnuefi
 handoff
 htmlcov
+iterdir
 iwyu
 jinja
 jsonnet
@@ -52,6 +56,7 @@ mocka
 mtools
 mypy
 nographic
+nojekyll
 noone
 nostdlib
 numpydoc
@@ -59,6 +64,7 @@ objcopy
 objs
 oneline
 ovmf
+pathlib
 pipx
 pixelsperline
 preapproved
