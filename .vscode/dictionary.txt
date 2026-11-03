@@ -7,6 +7,7 @@ cdrom
 cdrtools
 cmocka
 cmocka's
+copytree
 coveragerc
 cppdbg
 ctest
@@ -37,7 +38,6 @@ gnucxx
 gnuefi
 handoff
 htmlcov
-iterdir
 iwyu
 jinja
 jsonnet
@@ -78,12 +78,14 @@ regen
 rela
 reloc
 ripgreprc
+rmtree
 rodata
 sbclaude
 schemafile
 sdata
 shellcheck
 shellformat
+shutil
 snapcraft
 softprops
 statusline
