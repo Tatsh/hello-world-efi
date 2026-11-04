@@ -73,6 +73,7 @@ pycache
 pyinstaller
 pylock
 pyproject
+rdparty
 reflow
 regen
 rela
@@ -80,6 +81,7 @@ reloc
 ripgreprc
 rmtree
 rodata
+sarif
 sbclaude
 schemafile
 sdata
