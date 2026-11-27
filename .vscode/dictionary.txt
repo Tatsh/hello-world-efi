@@ -1,4 +1,3 @@
-analyzer
 bootx
 bsky
 bsymbolic
@@ -7,19 +6,16 @@ cdrom
 cdrtools
 cmocka
 cmocka's
-copytree
 coveragerc
 cppdbg
 ctest
 dashcam
 dbuild
-dcmake
 docstrings
 dwith
 dynsym
 efiboot
 efilib
-elif
 eltorito
 emul
 endforeach
@@ -64,8 +60,6 @@ objcopy
 objs
 oneline
 ovmf
-pathlib
-pipefail
 pipx
 pixelsperline
 preapproved
@@ -79,7 +73,6 @@ regen
 rela
 reloc
 ripgreprc
-rmtree
 rodata
 sarif
 sbclaude
@@ -87,7 +80,6 @@ schemafile
 sdata
 shellcheck
 shellformat
-shutil
 snapcraft
 softprops
 statusline
